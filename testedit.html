@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href="/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+	<link href="/bootstrap3-editable-1.5.1/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" />
+	<link href="/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" />
+	<link href="/pure-release-1.0.0/pure-min.css" rel="stylesheet" />
+
+	<script src="/js/jquery-3.3.1.min.js"></script>
+	<script src="/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+	<script src="/bootstrap3-editable-1.5.1/bootstrap3-editable/js/bootstrap-editable.js"></script>
+	<script src="/bootstrap-table/bootstrap-table.js"></script>
+	<script src="/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+	<script src="/bootstrap-table/extensions/editable/bootstrap-table-editable.js"></script>
+	
+	<script src="/js/commonfun.js"></script>
+		
+	<!--表格编辑-->
+
+
+
+<!-- <script src="./assets/tableEdit/js/bootstrap-datetimepicker.min.js"></script> -->
+<!-- <link href="./assets/tableEdit/css/bootstrap-datetimepicker.min.css" rel="stylesheet" /> -->
+
+
+
+    <title>Hello, world!</title>
+  </head>
+  <body>
+    <div class="container">
+	<div id="toolbar">
+  <button id="cal" class="btn btn-success">
+    <i class="glyphicon glyphicon-remove"></i> 计算
+  </button>
+</div>
+	<!-- <button type="button" class="btn btn-success">刷新</button> -->
+        <table id="table" class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th data-field="fc"></th>
+                <th data-field="sc"></th>
+                <th data-field="gcl"></th>
+				<th data-field="dwys"></th>
+                <th data-field="tzxs"></th>
+                <th data-field="dqtzxs"></th>
+            </tr>
+        </thead>
+    </table>
+	<div id="map
+	<form class="pure-form">
+    <fieldset>
+        <legend>计算系数</legend>
+        布置合理性系数f1：
+        <input type="number" id="f1" placeholder="系数f1" value="1" >		
+		加权平均质量系数f2:
+        <input type="number" id="f2"  placeholder="系数f2" value="1">
+    </fieldset>
+	
+</form>
+
+		
+	</div>
+    </div>
+	    
+</body>
+</html>
+
+<script>
+var $table = $('#table');
+
+
+var listJson = [];
+var contentFC = ["地形测绘", "地质测量", "遥感地质", "物探", "化探", "钻探", "山地工程", "岩矿测试"];
+var indexarray = [0, 2, 8, 10, 16, 24, 29, 32];
+var contentSC = ["地形测量", "制图", //2
+	"区域地质调查", "专项地质测量", "区域水文地质、生态环境地质调查",
+	"专项水文地质、生态环境地质测量",
+	"区域工程地质、环境地质调查",
+	"专项工程地质、环境地质、地质灾害测量", //8
+
+	"航空遥感彩色摄影", "遥感地质解译", //10
+	"磁法", "重力", "电法", "地震", "放射性", "侧井", //15
+	"土壤测量", "岩石测量", "水地球化学测量", "水系沉积物测量", "汞气测量", "地气测量", "地热化探测量", "航空物探", //23
+	"矿产地质钻探", "水文地质钻探", "地热钻探", "工程地质钻探", "原位测试", //28
+	"坑探", "浅井", "槽探", //31
+	"岩矿分析", "化探分析", "土壤分析", "水质分析", "光谱半定量分析", "非金属矿物性测试", "煤质分析", "岩矿鉴定与实验", "选冶实验"];
+
+var index = 0; //标注总的合并的
+var index_input = 0;
+for (i = 0; i < contentSC.length; i++) {
+	var jsonTemp = {};
+
+	if (in_array(i, indexarray) == true) {
+		jsonTemp.fc = contentFC[index];
+		index++;
+	} else
+		jsonTemp.fc = "";
+
+	jsonTemp.sc=contentSC[i];
+	
+	jsonTemp.gcl=0;
+	jsonTemp.dwys=1;
+	jsonTemp.tzxs=1;
+	jsonTemp.dqtzxs=1;
+	
+	listJson.push(jsonTemp);
+	　　
+}
+
+//聚合数据发送到链接
+
+
+function in_array(search, array) {
+	for (var i in array) {
+		if (array[i] == search) {
+			return true;
+		}
+	}
+	return false;
+};
+
+$(function () {
+	$('#table').bootstrapTable({
+		data: listJson,
+		toolbar: "#toolbar",
+		idField: "sc",
+		pagination: true,
+		showRefresh: true,
+		search: true,
+		clickToSelect: true,
+		columns: [
+			[	
+				{
+					field: "fc",
+					title: "工程名称",
+					align: "center" //返回行号
+				},
+				{
+					field: "sc",
+					title: "子类",
+					align: "center" //返回行号
+				}, 
+				{
+					field: "gcl",
+					title: "工程量",
+					align: "center",
+					//order: "asc",
+					sortable: "true",
+					editable: {
+						type: 'text',
+						mode: 'inline',
+						validate: function (v) {
+							if (!v)
+								return '不能为空';
+
+						}
+					}
+				}, 
+
+				{
+					field: "dwys",
+					title: "单位预算",
+					align: "center",
+					//order: "asc",
+					sortable: "true",
+					editable: {
+						type: 'text',
+						mode: 'inline',
+						validate: function (v) {
+							if (!v)
+								return '不能为空';
+
+						}
+					}
+				},
+				{
+					field: "tzxs",
+					title: "调整系数",
+					align: "center",
+					//order: "asc",
+					sortable: "true",
+					editable: {
+						type: 'text',
+						mode: 'inline',
+						validate: function (v) {
+							if (!v)
+								return '不能为空';
+
+						}
+					}
+				},
+				{
+					field: "dqtzxs",
+					title: "地区调整系数",
+					align: "center",
+					//order: "asc",
+					sortable: "true",
+					editable: {
+						type: 'text',
+						mode: 'inline',
+						validate: function (v) {
+							if (!v)
+								return '不能为空';
+
+						}
+					}
+				},
+
+			]
+		]
+
+	});
+},
+
+
+$(".btn").click(function(){
+
+var allTableData = $table.bootstrapTable('getData');
+
+result1=jsontoarray(allTableData);
+		
+		$.getJSON('http://127.0.0.1:5000/mrm/api/kccbxy/', 
+        //{U:'[1,2,3,4]',P:'[1,2,3,4]',AdCoeff:'[1,0.5,0.5,0.5]',AdCoeffA:'[1,1,1,1]',epsilon:0.3,F:'[[1,1,1,1],[1,1,1,1]]'},
+		{U:JSON.stringify(result1[0]),P:JSON.stringify(result1[1]),AdCoeff:JSON.stringify(result1[2]),AdCoeffA:JSON.stringify(result1[3]),epsilon:0.3,F:'[1,1]'},
+		function(data) {
+        alert(data.result);
+      });
+      return false;
+
+})
+  
+
+
+
+);
+
+$(document).ready(function () {
+	$('.comment').editable({
+		mode: 'inline',
+	});
+	$('.hours').editable({
+		mode: 'inline',
+		type: 'number',
+		step: '1.00',
+		min: '0.00',
+		max: '24'
+	});
+});
+
+</script>
+
+  </body>
+</html>
