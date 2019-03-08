@@ -22,7 +22,6 @@ function jsontoarray(jsonArray) {
 	return uaff;
 };
 
-
 function chuliangmeirow(id)
 {
 	var row={id:id,b11332:'0', b333:'0',b2334:'0',b11332xs:'1', b333xs:'1',b2334xs:'1',yjkz:'0',lskz:'0',sxyk:'0',cqhcl:'0',fjykzhcl:'1',clbyxs:'1'};
@@ -73,4 +72,91 @@ function chuliangmeitable(data)
 	total.push(cbxs);
 	return total;
 	
+}
+
+
+function autoaddcolumns(columns)
+{
+	var dynamicHeader = [];
+	var dyheaderone=[];
+	var dyheadertwo=[];
+	
+	
+	dyheaderone.push(
+	{
+		title: '选择',
+		//field: 'idcheck',
+		field : 'checked',
+		checkbox: true,
+		align: 'center',
+		valign: 'middle',
+		colspan: 1,
+		rowspan: 2,
+		clickToSelect:true
+	});
+	
+	column=[
+			{title:'销量',field:'xl',align: 'center',valign: 'middle',
+				editable: 
+					{	type: 'text',
+						mode: 'inline',
+						validate: function (v) {
+							if (!v)
+								return '不能为空';
+
+							}
+					}
+			},
+			{title:'单价',field:'price',align: 'center',valign: 'middle',
+				editable: 
+					{	type: 'text',
+						mode: 'inline',
+						validate: function (v) {
+							if (!v)
+								return '不能为空';
+
+							}
+					}			
+			}
+			]
+	for (var i = 0; i<columns.length; i++) 
+	{                                       
+        dyheaderone.push(
+		{
+            "title": columns[i],
+            
+			"field": '',
+			align: 'center',
+			valign: 'middle',
+			colspan: 2,
+			rowspan: 1
+        }
+		);
+		column[0].field=columns[i]+"-xl";
+		column[1].field=columns[i]+"-price";
+		dyheadertwo.push(column[0]);
+		dyheadertwo.push(column[1]);
+	}
+	dynamicHeader.push(dyheaderone);
+	dynamicHeader.push(dyheadertwo);
+	
+	return dynamicHeader;
+
+}
+
+function xiaoshourow(id,fields)
+{
+	var row={id:id};
+	for(j=0;j<fields.length;j++)
+	{
+		row[fields[j].field]=0;
+	}
+	return row;
+};
+
+
+
+
+function test()
+{
 }
