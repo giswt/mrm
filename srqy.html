@@ -73,7 +73,7 @@
 								<p/>
 								
 								<div  class="form-inline"> 
-								 <label>评估日期:</label>
+								 <label>矿&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;种:</label>
 									
 										<div class="form-group">
 											<select class="selectpicker" id="typeselect" data-width="240px">
@@ -95,7 +95,7 @@
 
 								<div class="col-lg-14">
 									<fieldset class="scheduler-border">
-										<legend ><h5>五年生产规模</h5></legend>
+										<legend ><h5>前五年生产规模</h5></legend>
 										
 										<div class=" input-group">
 											<span class="input-group-addon">第一年：</span>
@@ -242,6 +242,10 @@ var dynamicHeaderFields=[];
 
 var listJson = [];
 var pgjzr="";
+var nextday="";
+var pgnx=0;
+
+var ymd,year,month;
 
 
 //聚合数据发送到链接
@@ -589,23 +593,21 @@ $("#btncal").click(
 					}
 				}
 				
+				pgjzr=$('#ww').val();
+				if(pgjzr == "" || undefined == pgjzr)
+				{
+					alert('请输入评估日期');
+					return;
+				}
+				
+				
+				
 				//获取类型
 				type=eval($('#typeselect').selectpicker('val'));
-				
-				
-			
-				
-			
 				var allTableData = $table.bootstrapTable('getData');
-				
-				
-
 				result1=chuliangmeitable(allTableData);
-				
-				
-				a=JSON.stringify(scgm);
-				b=JSON.stringify(result1[0]);
-				
+				//a=JSON.stringify(scgm);
+				//b=JSON.stringify(result1[0]);
 					
 				$.getJSON('http://127.0.0.1:5000/mrm/api/mchuliang/', 
 					
@@ -614,31 +616,68 @@ $("#btncal").click(
 					if(data.result!="-1")
 					{
 						alert('评估年限：'+data.result);
-						if(eval(data.result)>30)
+						pgnx=eval(data.result)
+						if(pgnx>30)
+							pgnx=30.0;
+							
+							
 						
+							
+							
+						ymd=pgjzr.split("-");
+						year=ymd[0];
+						month=ymd[1];
 						
-						pgjzr=$('#ww').val();
-						//alert(tempw);
-						
-						
-						dynamicHeader=autoaddcolumns(['2016-1','2016-2']);
-						dynamicHeaderFields=dynamicHeader[1];
-						//初始化下一个表格
-						$('#tablexs').bootstrapTable('destroy').bootstrapTable(
+						$.getJSON('http://127.0.0.1:5000/mrm/api/pgjzr/',{year:year,month:month},
+						function(data)
 						{
-							data: listJson,
-							toolbar: "#toolbarxs",
-							idField: "sc",
-							pagination: true,
-							showRefresh: true,
-							search: true,
-							clickToSelect: true,
-							columns:dynamicHeader 
+							if(data.result!="-1")
+							{
+								pgjzr=data.result.pgjzr;
+								ymd=data.nextday.split("-");
+								year=ymd[0];
+								month=ymd[1];
+							
+							}
+							else
+							{
+							
+							}
+						
+						}
+						
+						
+						$.getJSON('http://127.0.0.1:5000/mrm/api/pgnxlist/', {year:year,month:month,years:pgnx},
+						function(data)
+						{
+							if(data.result!="-1")
+							{
+								dynamicHeader=autoaddcolumns(data.result);
+								dynamicHeaderFields=dynamicHeader[1];
+								//初始化下一个表格
+								$('#tablexs').bootstrapTable('destroy').bootstrapTable(
+								{
+									data: listJson,
+									toolbar: "#toolbarxs",
+									idField: "sc",
+									pagination: true,
+									showRefresh: true,
+									search: true,
+									clickToSelect: true,
+									columns:dynamicHeader 
+								});
+		
+							}
+							else
+							{
+								alert('评估数据 参数错误！');
+							}
+						
 						});
-
 						
 						
 						
+						//alert(tempw);
 						
 						
 						
