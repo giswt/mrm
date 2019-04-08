@@ -24,7 +24,7 @@ function jsontoarray(jsonArray) {
 
 function chuliangmeirow(id)
 {
-	var row={id:id,b11332:'0', b333:'0',b2334:'0',b11332xs:'1', b333xs:'1',b2334xs:'1',yjkz:'0',lskz:'0',sxyk:'0',cqhcl:'0',fjykzhcl:'1',clbyxs:'1'};
+	var row={id:id,b11332:'32.80', b333:'22.94',b2334:'0',b11332xs:'1', b333xs:'0.7',b2334xs:'1',yjkz:'9.58',lskz:'0',sxyk:'0',cqhcl:'0.85',fjykzhcl:'1',clbyxs:'1.5'};
 	return row;
 };
 
@@ -96,7 +96,7 @@ function autoaddcolumns(columns)
 	});
 	
 	column=[
-			{title:'销量',field:'xl',align: 'center',valign: 'middle',
+			{title:'&nbsp;&nbsp;销&nbsp;&nbsp;量&nbsp;&nbsp;',field:'xl',align: 'center',valign: 'middle',
 				editable: 
 					{	type: 'text',
 						mode: 'inline',
@@ -107,7 +107,7 @@ function autoaddcolumns(columns)
 							}
 					}
 			},
-			{title:'单价',field:'price',align: 'center',valign: 'middle',
+			{title:'&nbsp;&nbsp;单&nbsp;&nbsp;价&nbsp;&nbsp;',field:'price',align: 'center',valign: 'middle',
 				editable: 
 					{	type: 'text',
 						mode: 'inline',
@@ -133,7 +133,9 @@ function autoaddcolumns(columns)
         }
 		);
 		column[0].field=columns[i]+"-xl";
+		//column[0].width=100; //调整宽度
 		column[1].field=columns[i]+"-price";
+		//column[1].class='col-md-6';
 		dyheadertwo.push(column[0]);
 		dyheadertwo.push(column[1]);
 	}
@@ -149,10 +151,18 @@ function xiaoshourow(id,fields)
 	var row={id:id};
 	for(j=0;j<fields.length;j++)
 	{
-		row[fields[j].field]=0;
+		row[fields[j].field]=260;//价格 和销量  测试时都设置为260，方便
 	}
 	return row;
 };
+
+function xiaoshoumeitable(data)
+{
+	for(i=0;i<data.length;i++)
+	{
+		
+	}
+}
 
 
 

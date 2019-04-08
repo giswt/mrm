@@ -99,30 +99,30 @@
 										
 										<div class=" input-group">
 											<span class="input-group-addon">第一年：</span>
-											<input type="text" class="form-control" id="scgm1" />
+											<input type="text" class="form-control" id="scgm1"  value="4"/>
 										</div>
 										<p/>
 										<div class=" input-group">
 											<span class="input-group-addon">第二年：</span>
-											<input type="text" class="form-control" id="scgm2"  />
+											<input type="text" class="form-control" id="scgm2" value="4" />
 										</div>
 										<p/>
 										
 										<div class=" input-group">
 											<span class="input-group-addon">第三年：</span>
-											<input type="text" class="form-control" id="scgm3"  />
+											<input type="text" class="form-control" id="scgm3" value="4" />
 										</div>
 										<p/>
 										
 										<div class=" input-group">
 											<span class="input-group-addon">第四年：</span>
-											<input type="text" class="form-control"  id="scgm4" />
+											<input type="text" class="form-control"  id="scgm4" value="4" />
 										</div>
 										<p/>
 										
 										<div class=" input-group">
 											<span class="input-group-addon">第五年：</span>
-											<input type="text" class="form-control"  id="scgm5" />
+											<input type="text" class="form-control"  id="scgm5" value="4"/>
 										</div>
 										
 										
@@ -190,8 +190,8 @@
 							<table id="tablexs" class="table table-striped table-bordered table-hover">
 								<thead>
 									<tr>
-										<th data-field="fc">init1</th>
-										<th data-field="sc">init2</th>
+										<th data-field="fc">销量</th>
+										<th data-field="sc">单价</th>
 										
 									</tr>
 								</thead>
@@ -637,43 +637,44 @@ $("#btncal").click(
 								ymd=data.nextday.split("-");
 								year=ymd[0];
 								month=ymd[1];
-							
-							}
-							else
-							{
-							
-							}
-						
-						}
-						
-						
-						$.getJSON('http://127.0.0.1:5000/mrm/api/pgnxlist/', {year:year,month:month,years:pgnx},
-						function(data)
-						{
-							if(data.result!="-1")
-							{
-								dynamicHeader=autoaddcolumns(data.result);
-								dynamicHeaderFields=dynamicHeader[1];
-								//初始化下一个表格
-								$('#tablexs').bootstrapTable('destroy').bootstrapTable(
+								$.getJSON('http://127.0.0.1:5000/mrm/api/pgnxlist/', {year:year,month:month,years:pgnx},
+								function(data)
 								{
-									data: listJson,
-									toolbar: "#toolbarxs",
-									idField: "sc",
-									pagination: true,
-									showRefresh: true,
-									search: true,
-									clickToSelect: true,
-									columns:dynamicHeader 
+									if(data.result!="-1")
+									{
+										dynamicHeader=autoaddcolumns(data.result);
+										dynamicHeaderFields=dynamicHeader[1];
+										//初始化下一个表格
+										$('#tablexs').bootstrapTable('destroy').bootstrapTable(
+										{
+											data: listJson,
+											toolbar: "#toolbarxs",
+											idField: "sc",
+											pagination: true,
+											showRefresh: true,
+											search: true,
+											clickToSelect: true,
+											columns:dynamicHeader 
+										});
+				
+									}
+									else
+									{
+										alert('评估数据 参数错误！');
+									}
+								
 								});
-		
+							
 							}
 							else
 							{
-								alert('评估数据 参数错误！');
+							
 							}
 						
 						});
+						
+						
+						
 						
 						
 						
@@ -721,6 +722,89 @@ $("#btndelxs").click(function()
 
 $("#btncalxs").click(function()
 	{
+		var allTableDataxs = $('#tablexs').bootstrapTable('getData');
+	
+		$.getJSON('http://127.0.0.1:5000/mrm/api/cxiaoshoue/', 
+						
+						{TYPE:type,SCGM:JSON.stringify(scgm),BYCL:JSON.stringify(result1[0]),KXDXS :JSON.stringify(result1[1]),SSSJ :JSON.stringify(result1[2]),CBXS :JSON.stringify(result1[3])},
+						function(data) {
+						if(data.result!="-1")
+						{
+							alert('评估年限：'+data.result);
+							pgnx=eval(data.result)
+							if(pgnx>30)
+								pgnx=30.0;
+								
+								
+							
+								
+								
+							ymd=pgjzr.split("-");
+							year=ymd[0];
+							month=ymd[1];
+							
+							$.getJSON('http://127.0.0.1:5000/mrm/api/pgjzr/',{year:year,month:month},
+							function(data)
+							{
+								if(data.result!="-1")
+								{
+									pgjzr=data.result.pgjzr;
+									ymd=data.nextday.split("-");
+									year=ymd[0];
+									month=ymd[1];
+									$.getJSON('http://127.0.0.1:5000/mrm/api/pgnxlist/', {year:year,month:month,years:pgnx},
+									function(data)
+									{
+										if(data.result!="-1")
+										{
+											dynamicHeader=autoaddcolumns(data.result);
+											dynamicHeaderFields=dynamicHeader[1];
+											//初始化下一个表格
+											$('#tablexs').bootstrapTable('destroy').bootstrapTable(
+											{
+												data: listJson,
+												toolbar: "#toolbarxs",
+												idField: "sc",
+												pagination: true,
+												showRefresh: true,
+												search: true,
+												clickToSelect: true,
+												columns:dynamicHeader 
+											});
+					
+										}
+										else
+										{
+											alert('评估数据 参数错误！');
+										}
+									
+									});
+								
+								}
+								else
+								{
+								
+								}
+							
+							});
+							
+							
+							
+							
+							
+							
+							//alert(tempw);
+							
+							
+							
+						}
+						else
+						{
+							alert('参数错误！');
+						}
+						
+					  });
+	
 
 	}
 ),
