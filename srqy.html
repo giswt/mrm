@@ -723,25 +723,23 @@ $("#btndelxs").click(function()
 $("#btncalxs").click(function()
 	{
 		var allTableDataxs = $('#tablexs').bootstrapTable('getData');
+		var totalxlp=xiaoshoumeitable(allTableDataxs);
 	
 		$.getJSON('http://127.0.0.1:5000/mrm/api/cxiaoshoue/', 
 						
-						{TYPE:type,SCGM:JSON.stringify(scgm),BYCL:JSON.stringify(result1[0]),KXDXS :JSON.stringify(result1[1]),SSSJ :JSON.stringify(result1[2]),CBXS :JSON.stringify(result1[3])},
+						{xiaoliang:JSON.stringify(totalxlp[0]),jiage:JSON.stringify(totalxlp[1])},
 						function(data) {
 						if(data.result!="-1")
 						{
 							alert('评估年限：'+data.result);
-							pgnx=eval(data.result)
-							if(pgnx>30)
-								pgnx=30.0;
+							xiaoshoue=eval(data.result)
+							
 								
 								
 							
 								
 								
-							ymd=pgjzr.split("-");
-							year=ymd[0];
-							month=ymd[1];
+							
 							
 							$.getJSON('http://127.0.0.1:5000/mrm/api/pgjzr/',{year:year,month:month},
 							function(data)

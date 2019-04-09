@@ -95,7 +95,12 @@ function autoaddcolumns(columns)
 		clickToSelect:true
 	});
 	
-	column=[
+	
+	for (var i = 0; i<columns.length; i++) 
+	{
+
+
+        var column=[
 			{title:'&nbsp;&nbsp;销&nbsp;&nbsp;量&nbsp;&nbsp;',field:'xl',align: 'center',valign: 'middle',
 				editable: 
 					{	type: 'text',
@@ -119,8 +124,9 @@ function autoaddcolumns(columns)
 					}			
 			}
 			]
-	for (var i = 0; i<columns.length; i++) 
-	{                                       
+
+
+		
         dyheaderone.push(
 		{
             "title": columns[i],
@@ -132,12 +138,14 @@ function autoaddcolumns(columns)
 			rowspan: 1
         }
 		);
-		column[0].field=columns[i]+"-xl";
+		var columntemp=[];
+		columntemp=column.concat();
+		columntemp[0].field=columns[i]+"-xl";
 		//column[0].width=100; //调整宽度
-		column[1].field=columns[i]+"-price";
+		columntemp[1].field=columns[i]+"-price";
 		//column[1].class='col-md-6';
-		dyheadertwo.push(column[0]);
-		dyheadertwo.push(column[1]);
+		dyheadertwo.push(columntemp[0]);
+		dyheadertwo.push(columntemp[1]);
 	}
 	dynamicHeader.push(dyheaderone);
 	dynamicHeader.push(dyheadertwo);
@@ -158,10 +166,37 @@ function xiaoshourow(id,fields)
 
 function xiaoshoumeitable(data)
 {
+	var xl=[];
+	var price=[];
+
+	var tempbool=true;
 	for(i=0;i<data.length;i++)
 	{
+		var tempxl=[];
+		var tempprice=[];
+		
+		for(var j in data[i]) {
+			if(j!="checked" && j!="id")
+			{
+				if(tempbool==true)
+				{
+					tempprice.push(eval(data[i][j]));
+					tempbool=false;
+				}
+				else
+				{
+					tempxl.push(eval(data[i][j]));
+					tempbool=true;
+				}
+			}
+		}
+		xl.push(tempxl);
+		price.push(tempprice);
+		
+		
 		
 	}
+	return [xl,price];
 }
 
 
