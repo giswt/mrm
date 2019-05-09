@@ -33,7 +33,7 @@
 	<!-- 导出功能 -->
 	<!-- https://www.jianshu.com/p/9cc6c903c4b6 -->
 	<script src="/bootstrap-table/extensions/export/bootstrap-table-export.js"></script>
-	<script src="/tableExport.jquery.plugin/tableExport.js"
+	<script src="/tableExport.jquery.plugin/tableExport.js"></script>
 	
 	
 	
@@ -793,9 +793,11 @@ $("#btncalxs").click(function()
 							zxxs=$('#zxxs').val();
 							ckqqyxs=$('#ckqqyxs').val();
 							var strarr=[];
+							var head=[];
 							for( i=1;i<dynamicHeader[0].length;i++)
 							{
 								strarr.push(dynamicHeader[0][i].title);
+								head.push(dynamicHeader[0][i].title.substr(0,4));
 							}
 
 														
@@ -812,7 +814,7 @@ $("#btncalxs").click(function()
 									[
 										{
 											title: '序号',
-											field: '',
+											field: 'xh',
 											align: 'center',
 											valign: 'middle',
 											colspan: 1,
@@ -821,12 +823,22 @@ $("#btncalxs").click(function()
 										
 										{
 											title: '项目名称',
-											field: '',
+											field: 'xmmc',
 											align: 'center',
 											valign: 'middle',
 											colspan: 1,
 											rowspan: 2
 										},
+										
+										{
+											title: '合计',
+											field: 'hj',
+											align: 'center',
+											valign: 'middle',
+											colspan: 1,
+											rowspan: 2
+										},
+										
 									
 									
 									
@@ -841,6 +853,35 @@ $("#btncalxs").click(function()
 									
 									
 									];
+									
+									//表头
+									
+									for(ri=0;ri<strarr.length;ri++)
+									{
+										resultColumns[0].push(
+											{
+												"title": strarr[ri],
+												
+												"field": '',
+												align: 'center',
+												valign: 'middle',
+												colspan: 1,
+												rowspan: 1
+											});
+										
+										resultColumns[1].push(
+											{
+												"title": ri+1,
+												
+												"field": strarr[ri].substr(0,4), //测试 用标题代替
+												align: 'center',
+												valign: 'middle',
+												colspan: 1,
+												rowspan: 1
+											});
+											
+											
+									}
 								
 								
 								
@@ -854,7 +895,7 @@ $("#btncalxs").click(function()
 												showRefresh: true,
 												//search: true,
 												//clickToSelect: true,
-												//columns:dynamicHeader ,
+												columns:resultColumns ,
 												showColumns : true,
 												
 												
@@ -870,7 +911,14 @@ $("#btncalxs").click(function()
 													//onMsoNumberFormat: doOnMsoNumberFormat,//大概是处理数字的方法
 													//onCellHtmlData: DoOnCellHtmlData,//这个属性方法可以重新修改每一个单元格的值
 												},
-											}),
+											});
+											
+											
+											//添加行数据
+									resultFormat($('#tableResult'),data.result,head,zxxs,ckqqyxs);
+									
+									
+									//$('#tableResult').bootstrapTable('insertRow', {index: 0, row: {xh:1,xmmc:'测试','2019':66}});
 								
 								}
 								else

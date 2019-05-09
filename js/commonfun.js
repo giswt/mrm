@@ -199,6 +199,60 @@ function xiaoshoumeitable(data)
 	return [xl,price];
 }
 
+function resultFormat(table,data,head,zxxs,ckqyxs)
+{
+	var indexi=1;
+	
+	zxxs=zxxs*100;
+	ckqyxs=ckqyxs*100;
+	
+	var xmmclist=['销售收入','折现系数('+zxxs+'%)','销售收入现值','销售收入现值累计','采矿权权益系数','采矿权评估价值'];
+	
+	xsehj=0;
+	for(var j=0;j<data[0].length;j++)
+		xsehj=xsehj+data[0][j];
+	
+	var totalxz=0;
+	var totalxzlist=[];
+	var cqxyxslist=[];
+	
+	for(var j=0;j<data[2].length;j++)
+	{
+		totalxz=totalxz+data[2][j];
+		totalxzlist.push(totalxz);
+		cqxyxslist.push(ckqyxs+'%');
+	}
+	
+	data.splice(3,0,totalxzlist);
+	data.splice(4,0,cqxyxslist);
+	
+	
+	for(var i=1;i<7;i++)
+	{
+		var rowresult={};
+		rowresult.xh=i;
+		rowresult.xmmc=xmmclist[i-1]
+		
+		for (var j=0;j<head.length;j++)
+		{
+			rowresult[head[j]]=data[i-1][j]
+			
+			
+		}
+		if(i==1)
+			rowresult.hj=xsehj;
+		if(i==3)
+			rowresult.hj=totalxz;
+		if(i==6)
+			rowresult.hj=data[i-1][head.length-1]
+		
+		table.bootstrapTable('insertRow', {index: i, row: rowresult});
+	}
+	
+	
+	
+}
+
 
 
 
